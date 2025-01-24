@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     private GameObject playerInstance;
     private Transform playerSpawnTransform;
 
+    public delegate void GMAction();
+    public static event GMAction OnGamePause;
+    public static event GMAction OnGameResume;
+
     private void Awake()
     {
         Transform parentTransform = transform.parent;
@@ -93,6 +97,9 @@ public class GameManager : MonoBehaviour
     {
         isPaused = !Time.timeScale.Equals(0f);
         Time.timeScale = isPaused ? 0f : 1f;
+
+        if (isPaused) { OnGamePause?.Invoke(); }
+        else { OnGameResume?.Invoke(); }
 
         Debug.Log(isPaused ? "Game Paused" : "Game Unpaused");
     }
